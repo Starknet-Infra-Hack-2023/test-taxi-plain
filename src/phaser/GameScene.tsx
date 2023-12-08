@@ -9,6 +9,14 @@ class GameScene extends Phaser.Scene {
     ground!: Phaser.Tilemaps.TilemapLayer
     player1!: Phaser.GameObjects.Sprite
     passenger!: Phaser.GameObjects.Sprite
+    passengerInTaxi: boolean = false
+    // destinationLocation: number = 0
+    // locationMapping = {
+    //     0: {x:0, y:0},
+    //     1: {x:4, y:0},
+    //     2: {x:0, y:4},
+    //     3: {x:4, y:4},
+    // }
     desintation!: Phaser.GameObjects.Sprite
     tile_width = 32
     tile_height = 32
@@ -57,18 +65,13 @@ class GameScene extends Phaser.Scene {
         this.player1.scale = this.scalefactor * 0.8; // 0.8 is the scale of the spritesheet
         this.player1.depth = 30;
 
-        
-
-        
-
-
         const gridEngineConfig = {
             characters: [
                 {
                     id: "customer1",
                     sprite: this.passenger,
-                    startPosition: {x:4, y:4},
-                    charLayer: 'level2',
+                    startPosition: {x:0, y:0},
+                    //charLayer: 'level2',
                     collides: {
                         collisionGroups: []
                     }
@@ -87,7 +90,7 @@ class GameScene extends Phaser.Scene {
                     id: "taxi1",
                     sprite: this.player1,
                     walkingAnimationMapping: 0,
-                    startPosition: { x: 4, y: 2 },
+                    startPosition: { x: 3, y: 3 },
                     //charLayer: 'ground',
                     collides: {
                         collisionGroups: []
@@ -96,24 +99,112 @@ class GameScene extends Phaser.Scene {
                 
             ],
         };
-    
+
         this.gridEngine.create(map, gridEngineConfig);
 
         this.gridEngine.movementStopped().subscribe(() => {
+            const taxiPos = this.player1.getCenter();
+            const tileXY = this.ground.getTileAtWorldXY(taxiPos.x, taxiPos.y);
+            //console.log("taxi position: ",tileXY.x, ",", tileXY.y);
+
+            const passengerPos = this.passenger.getCenter();
+            const tileXY2 = this.ground.getTileAtWorldXY(passengerPos.x, passengerPos.y);
+            //console.log("passenger position: ",tileXY2.x, ",", tileXY2.y);
+            //console.log("passenger code: ", this.getPassengerCode(tileXY2));
+
+            const destinationPos = this.desintation.getCenter();
+            const tileXY3 = this.ground.getTileAtWorldXY(destinationPos.x, destinationPos.y);
+            //console.log("destination position: ",tileXY3.x, ",", tileXY3.y);
+            //console.log("destination code: ", this.getDestinationCode(tileXY3));
+
+            console.log("configcode: ", tileXY.y, tileXY.x, this.getPassengerCode(tileXY2), this.getDestinationCode(tileXY3));
+        });
+
+        //this.input.on('pointerdown', () => {
+        this.input.keyboard.on('keydown-A', () => {
             // const pos = this.player1.getCenter();
             // const tileXY = this.ground.getTileAtWorldXY(pos.x, pos.y);
             // console.log(tileXY);
+            this.pickupPassenger();
+
         });
 
-        // this.input.on('pointerdown', () => {
-
-        //     const pos = this.player1.getCenter();
-        //     const tileXY = this.ground.getTileAtWorldXY(pos.x, pos.y);
-        //     console.log(tileXY);
-
-        // });
+        this.input.keyboard.on('keydown-D', () => {
+            console.log("D pressed");
+            this.dropOffPassenger();
+        });
 
     }
+
+    getPassengerCode(tileXY: Phaser.Tilemaps.Tile) {
+        if(this.passengerInTaxi){
+            return 4;
+        }else if(tileXY.x == 0 && tileXY.y == 0) {
+            return 0;
+        }else if(tileXY.x == 4 && tileXY.y == 0) {
+            return 1;
+        }else if(tileXY.x == 0 && tileXY.y == 4) {
+            return 2;
+        }else if(tileXY.x == 4 && tileXY.y == 4) {
+            return 3;
+        }else{
+            console.log("Passenger not picked up!")
+            return 4;
+        }
+    }
+    getDestinationCode(tileXY: Phaser.Tilemaps.Tile) {
+        if(tileXY.x == 0 && tileXY.y == 0) {
+            return 0;
+        }else if(tileXY.x == 4 && tileXY.y == 0) {
+            return 1;
+        }else if(tileXY.x == 0 && tileXY.y == 4) {
+            return 2;
+        }else {
+            return 3;
+        }
+    }
+
+    pickupPassenger() {
+        const taxiPos = this.player1.getCenter();
+        const tileXY = this.ground.getTileAtWorldXY(taxiPos.x, taxiPos.y);
+
+        const passengerPos = this.passenger.getCenter();
+        const tileXY2 = this.ground.getTileAtWorldXY(passengerPos.x, passengerPos.y);
+
+        if(tileXY.x == tileXY2.x && tileXY.y == tileXY2.y) {
+            this.passengerInTaxi = true;
+            //this.passenger.setActive(false);
+            //this.passenger.setPosition(500,500);
+            this.passenger.setVisible(false);
+            //this.gridEngine.removeCharacter("customer1");
+            console.log("passenger picked up!");
+        }
+    }
+
+    dropOffPassenger() {
+        const taxiPos = this.player1.getCenter();
+        const tileXY = this.ground.getTileAtWorldXY(taxiPos.x, taxiPos.y);
+
+        const destinationPos = this.desintation.getCenter();
+        const tileXY3 = this.ground.getTileAtWorldXY(destinationPos.x, destinationPos.y);
+
+        if(this.passengerInTaxi && tileXY.x == tileXY3.x && tileXY.y == tileXY3.y) {
+            this.passengerInTaxi = false;
+            console.log("passenger dropped off!");
+
+            // here resets game
+            console.log("game resetting...")
+
+            return true;
+        } else if (!this.passengerInTaxi) {
+            console.log("No passenger in taxi!");
+            return false;
+        } else {
+            console.log("Dropped off at wrong destination!");
+            return false;
+        }
+    }
+
 
     update(t: number, dt: number) {
         if (this.cursors.left.isDown) {
