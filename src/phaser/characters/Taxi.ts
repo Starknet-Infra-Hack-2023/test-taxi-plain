@@ -16,41 +16,41 @@ export default class Taxi extends Phaser.Physics.Arcade.Sprite {
     }
     update(cursors: Phaser.Types.Input.Keyboard.CursorKeys){
 
-        if (!cursors)
-		{
-			return
-		}
+        // if (!cursors)
+		// {
+		// 	return
+		// }
 
-		const leftDown = cursors.left?.isDown
-		const rightDown = cursors.right?.isDown
-		const upDown = cursors.up?.isDown
-		const downDown = cursors.down?.isDown
+		// const leftDown = cursors.left?.isDown
+		// const rightDown = cursors.right?.isDown
+		// const upDown = cursors.up?.isDown
+		// const downDown = cursors.down?.isDown
 
-        if (leftDown)
-		{   
-            this.anims.play('taxi-left', true)
-			this.setVelocity(-this.speed, 0)
-		}
-		else if (rightDown)
-		{
-            this.anims.play('taxi-right', true)
-			this.setVelocity(this.speed, 0)
+        // if (leftDown)
+		// {   
+        //     this.anims.play('taxi-left', true)
+		// 	this.setVelocity(-this.speed, 0)
+		// }
+		// else if (rightDown)
+		// {
+        //     this.anims.play('taxi-right', true)
+		// 	this.setVelocity(this.speed, 0)
 			
-		}
-		else if (upDown)
-		{   
-            this.anims.play('taxi-up', true)
-			this.setVelocity(0, -this.speed)
-		}
-		else if (downDown)
-		{   
-            this.anims.play('taxi-down', true)
-			this.setVelocity(0, this.speed)
-		}
-		else
-		{
-			this.anims.play('taxi-mid', true)
-			this.setVelocity(0, 0)
-		}
+		// }
+		// else if (upDown)
+		// {   
+        //     this.anims.play('taxi-up', true)
+		// 	this.setVelocity(0, -this.speed)
+		// }
+		// else if (downDown)
+		// {   
+        //     this.anims.play('taxi-down', true)
+		// 	this.setVelocity(0, this.speed)
+		// }
+		// else
+		// {
+		// 	this.anims.play('taxi-mid', true)
+		// 	this.setVelocity(0, 0)
+		// }
     }
 }

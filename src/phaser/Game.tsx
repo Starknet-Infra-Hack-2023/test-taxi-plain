@@ -1,7 +1,7 @@
 import React from 'react';
 import { usePhaserGame } from '../hooks/usePhaserGame';
 import GameScene from './GameScene';
-
+import { GridEngine, GridEngineHeadless } from "grid-engine";
 
 const Game = () => {
     
@@ -24,6 +24,15 @@ const Game = () => {
         physics:{
             default: 'arcade',
             arcade:{ gravity: { y: 0 } }
+        },
+        plugins: {
+            scene: [
+                {
+                    key: "gridEngine",
+                    plugin: GridEngine,
+                    mapping: "gridEngine",
+                },
+            ],
         },
         scene: [GameScene]
     }
