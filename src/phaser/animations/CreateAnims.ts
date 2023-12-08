@@ -33,6 +33,20 @@ const createAnims = (anims: Phaser.Animations.AnimationManager) => {
         repeat: -1,
         frameRate: frameRate
     });
+
+    anims.create({
+        key: 'customer-mid',
+        frames: [{key: 'customer1', frame: 'passenger.png'}],
+        repeat: -1,
+        frameRate: frameRate
+    });
+
+    anims.create({
+        key: 'destination',
+        frames: [{key: 'hotel1', frame: 'hotel.png'}],
+        repeat: -1,
+        frameRate: frameRate
+    });
 }
 
 export {
