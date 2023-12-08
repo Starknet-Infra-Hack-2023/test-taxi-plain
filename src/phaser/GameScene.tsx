@@ -18,7 +18,7 @@ class GameScene extends Phaser.Scene {
         super('GameScene');
     }
     preload() {
-        this.load.image('roads', 'tiles/taxi_background.png');
+        this.load.image('roads', 'tiles/taixbgbig.png');
         this.load.tilemapTiledJSON('roadtilemap', 'maps/GreyGround.json');
         this.load.atlas('customer1', 'characters/taxi.png', 'characters/taxi.json')
         this.load.atlas('hotel1', 'characters/taxi.png', 'characters/taxi.json')
@@ -33,40 +33,85 @@ class GameScene extends Phaser.Scene {
         
 
         const map = this.make.tilemap({ key: 'roadtilemap' });
-        const tileset = map.addTilesetImage('taxi_background', 'roads');
+        const tileset = map.addTilesetImage('taixbgbig', 'roads');
         
-        this.ground = map.createLayer('ground', "taxi_background", 0, 0);
-        this.ground.scale = this.scalefactor
+        this.ground = map.createLayer('ground', "taixbgbig", 0, 0);
+        const level2 = map.createLayer('level2', "taixbgbig", 0, 0)
+        const level3 = map.createLayer('level3', "taixbgbig", 0, 0);
+        this.ground.scale = this.scalefactor;
+        level2.scale = this.scalefactor;
+        level3.scale = this.scalefactor;
+
+
+        this.desintation = this.add.sprite(80, 80, "hotel1");
+        this.desintation.setFrame("hotel.png")
+        this.desintation.scale = this.scalefactor;
+        this.desintation.depth = 10;
+
+        this.passenger = this.add.sprite(80, 80, "customer1");
+        this.passenger.setFrame("passenger.png")
+        this.passenger.scale = this.scalefactor;
+        this.passenger.depth = 20;
 
         this.player1 = this.add.sprite(80, 80, "taxi1");
         this.player1.scale = this.scalefactor * 0.8; // 0.8 is the scale of the spritesheet
+        this.player1.depth = 30;
+
+        
+
+        
+
 
         const gridEngineConfig = {
             characters: [
                 {
-                id: "taxi1",
-                sprite: this.player1,
-                walkingAnimationMapping: 0,
-                startPosition: { x: 0, y: 0 },
+                    id: "customer1",
+                    sprite: this.passenger,
+                    startPosition: {x:4, y:4},
+                    charLayer: 'level2',
+                    collides: {
+                        collisionGroups: []
+                    }
                 },
+                {
+                    id: "hotel1",
+                    sprite: this.desintation,
+                    startPosition: { x:4, y:4},
+                    charLayer: 'ground',
+                    collides: {
+                        collisionGroups: []
+                    }
+                },
+                
+                {
+                    id: "taxi1",
+                    sprite: this.player1,
+                    walkingAnimationMapping: 0,
+                    startPosition: { x: 4, y: 2 },
+                    //charLayer: 'ground',
+                    collides: {
+                        collisionGroups: []
+                    }
+                },
+                
             ],
         };
     
         this.gridEngine.create(map, gridEngineConfig);
 
         this.gridEngine.movementStopped().subscribe(() => {
-            const pos = this.player1.getCenter();
-            const tileXY = this.ground.getTileAtWorldXY(pos.x, pos.y);
-            console.log(tileXY);
+            // const pos = this.player1.getCenter();
+            // const tileXY = this.ground.getTileAtWorldXY(pos.x, pos.y);
+            // console.log(tileXY);
         });
 
-        this.input.on('pointerdown', () => {
+        // this.input.on('pointerdown', () => {
 
-            const pos = this.player1.getCenter();
-            const tileXY = this.ground.getTileAtWorldXY(pos.x, pos.y);
-            console.log(tileXY);
+        //     const pos = this.player1.getCenter();
+        //     const tileXY = this.ground.getTileAtWorldXY(pos.x, pos.y);
+        //     console.log(tileXY);
 
-        });
+        // });
 
     }
 
