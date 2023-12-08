@@ -79,7 +79,7 @@ class GameScene extends Phaser.Scene {
                 {
                     id: "hotel1",
                     sprite: this.desintation,
-                    startPosition: { x:4, y:4},
+                    startPosition: { x:3, y:4},
                     charLayer: 'ground',
                     collides: {
                         collisionGroups: []
@@ -145,7 +145,7 @@ class GameScene extends Phaser.Scene {
             return 1;
         }else if(tileXY.x == 0 && tileXY.y == 4) {
             return 2;
-        }else if(tileXY.x == 4 && tileXY.y == 4) {
+        }else if(tileXY.x == 3 && tileXY.y == 4) {
             return 3;
         }else{
             console.log("Passenger not picked up!")
@@ -153,14 +153,14 @@ class GameScene extends Phaser.Scene {
         }
     }
     getDestinationCode(tileXY: Phaser.Tilemaps.Tile) {
-        if(tileXY.x == 0 && tileXY.y == 0) {
-            return 0;
+        if(tileXY.x == 3 && tileXY.y == 4) {
+            return 3;
         }else if(tileXY.x == 4 && tileXY.y == 0) {
             return 1;
         }else if(tileXY.x == 0 && tileXY.y == 4) {
             return 2;
         }else {
-            return 3;
+            return 0;
         }
     }
 
